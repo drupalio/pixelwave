@@ -2,24 +2,19 @@ package pixelweave.core;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
-import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -103,28 +98,6 @@ public final class Window {
 
     public double nowSeconds() {
         return glfwGetTime();
-    }
-
-    public double mouseX() {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            var px = stack.mallocDouble(1);
-            var py = stack.mallocDouble(1);
-            glfwGetCursorPos(handle, px, py);
-            return px.get(0);
-        }
-    }
-
-    public double mouseY() {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            var px = stack.mallocDouble(1);
-            var py = stack.mallocDouble(1);
-            glfwGetCursorPos(handle, px, py);
-            return py.get(0);
-        }
-    }
-
-    public boolean leftMousePressed() {
-        return glfwGetMouseButton(handle, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
     }
 
     public long handle() {
