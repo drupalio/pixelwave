@@ -1,0 +1,51 @@
+plugins {
+    id 'application'
+    id 'java'
+}
+
+group = 'dev.pixelweave'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+def lwjglVersion = '3.3.4'
+def jsoupVersion = '1.18.1'
+def os = org.gradle.internal.os.OperatingSystem.current()
+def arch = System.getProperty('os.arch').toLowerCase(java.util.Locale.ROOT)
+def lwjglNatives = os.windows
+        ? (arch.contains('64') && arch.contains('aarch') ? 'natives-windows-arm64' : 'natives-windows')
+        : (os.macOsX
+            ? (arch.contains('aarch') || arch.contains('arm') ? 'natives-macos-arm64' : 'natives-macos')
+            : (arch.contains('aarch') || arch.contains('arm') ? 'natives-linux-arm64' : 'natives-linux'))
+
+dependencies {
+    implementation platform("org.lwjgl:lwjgl-bom:${lwjglVersion}")
+
+    implementation 'org.lwjgl:lwjgl'
+    implementation 'org.lwjgl:lwjgl-glfw'
+    implementation 'org.lwjgl:lwjgl-opengl'
+    implementation 'org.lwjgl:lwjgl-stb'
+
+    runtimeOnly "org.lwjgl:lwjgl::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::${lwjglNatives}"
+    runtimeOnly "org.lwjgl:lwjgl-stb::${lwjglNatives}"
+
+    implementation "org.jsoup:jsoup:${jsoupVersion}"
+}
+
+application {
+    mainClass = 'pixelweave.Main'
+    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
