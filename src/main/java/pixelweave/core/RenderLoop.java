@@ -1,24 +1,16 @@
 package pixelweave.core;
 
-import pixelweave.input.MouseHandler;
 import pixelweave.render.Renderer;
-import pixelweave.ui.UiScene;
 
 public final class RenderLoop {
     private static final double TARGET_FRAME_SECONDS = 1.0 / 60.0;
 
     private final Window window;
     private final Renderer renderer;
-    private final UiScene uiScene;
-    private final MouseHandler mouseHandler;
 
-    private boolean previousMouseDown;
-
-    public RenderLoop(Window window, Renderer renderer, UiScene uiScene, MouseHandler mouseHandler) {
+    public RenderLoop(Window window, Renderer renderer) {
         this.window = window;
         this.renderer = renderer;
-        this.uiScene = uiScene;
-        this.mouseHandler = mouseHandler;
     }
 
     public void run() {
@@ -28,17 +20,7 @@ public final class RenderLoop {
             double delta = current - previous;
             previous = current;
 
-            boolean mouseDown = window.leftMousePressed();
-            mouseHandler.updatePosition(window.mouseX(), window.mouseY());
-            mouseHandler.updatePressed(mouseDown);
-
-            boolean clickReleased = previousMouseDown && !mouseDown;
-            previousMouseDown = mouseDown;
-
-            uiScene.update(mouseHandler, clickReleased);
-            uiScene.record();
-
-            renderer.render(delta, uiScene.displayList());
+            renderer.render(delta);
             window.swapBuffers();
             window.pollEvents();
 

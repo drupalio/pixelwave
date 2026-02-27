@@ -13,12 +13,7 @@ repositories {
 def lwjglVersion = '3.3.4'
 def jsoupVersion = '1.18.1'
 def os = org.gradle.internal.os.OperatingSystem.current()
-def arch = System.getProperty('os.arch').toLowerCase(java.util.Locale.ROOT)
-def lwjglNatives = os.windows
-        ? (arch.contains('64') && arch.contains('aarch') ? 'natives-windows-arm64' : 'natives-windows')
-        : (os.macOsX
-            ? (arch.contains('aarch') || arch.contains('arm') ? 'natives-macos-arm64' : 'natives-macos')
-            : (arch.contains('aarch') || arch.contains('arm') ? 'natives-linux-arm64' : 'natives-linux'))
+def lwjglNatives = os.windows ? 'natives-windows' : (os.macOsX ? 'natives-macos' : 'natives-linux')
 
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:${lwjglVersion}")
@@ -38,7 +33,6 @@ dependencies {
 
 application {
     mainClass = 'pixelweave.Main'
-    applicationDefaultJvmArgs = ['--enable-native-access=ALL-UNNAMED']
 }
 
 tasks.withType(JavaCompile).configureEach {
